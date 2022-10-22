@@ -1,3 +1,10 @@
-Purpose: This software uses the gmail API to retrieve
-and process email info to multiple databases
+Purpose: This software uses the teleport API to retrieve
+information about quality of life scores and salaries to
+find the best numbers of both of the scores in a list
+of all the urban areas registered there.
+
+Challenge: Get all the information about scores and salaries,
+make an index of them and get a list of the countries associated
+with all these cities, and get the medium index of the countries
+to make a graph.
 

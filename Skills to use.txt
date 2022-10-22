@@ -1,0 +1,12 @@
+Skills to use:
+- Iterations
+- Tuples
+- Dictionaries
+- Lists
+- Reg Exp
+- Urlib
+- API (Json, xml)
+- BeaultifulSoup
+- OOP class (Review)
+- Databases (Review)
+- Data visualization (Review)

@@ -1,8 +1,6 @@
-from textwrap import indent
 import urllib.request, urllib.parse, urllib.error
 import json
 import sqlite3
-import re
 
 conn = sqlite3.connect('teleport-db.sqlite')
 cur = conn.cursor()
@@ -91,12 +89,15 @@ while True:
             print(json.dumps(js2["categories"][7]))
             print(json.dumps(js2["categories"][6]))
             print(json.dumps(js2["categories"][1]))
-
-            cur.execute('''INSERT OR REPLACE INTO Cities (city , salary , leisureS , safetyS , businessFredomS , costOfLivingS) VALUES (? , ? , ? , ? , ? , ?)''',(city , salary , leisureS , safetyS , businessFredomS , costOfLivingS) )              
+            
             cur.execute('''INSERT OR REPLACE INTO Countries (country) VALUES (?)''',(country, ) )
-            cur.execute('''INSERT OR REPLACE INTO AdminDs (adminD) VALUES (?)''',(adminD, ) )   
+            cur.execute('SELECT id FROM Countries WHERE country = (?)', (country, ))
+            id_country = cur.fetchone()[0]
+            cur.execute('''INSERT OR REPLACE INTO AdminDs (adminD , id_country) VALUES (? , ?)''',(adminD, id_country) )   
 
-            cur.execute('''SELECT id FROM ''')
+            cur.execute('SELECT id FROM AdminDs WHERE adminD = (?)', (adminD, ))
+            id_adminD = cur.fetchone()[0]
+            cur.execute('''INSERT OR REPLACE INTO Cities (city , salary , leisureS , safetyS , businessFredomS , costOfLivingS, id_adminD) VALUES (? , ? , ? , ? , ? , ? , ?)''',(city , salary , leisureS , safetyS , businessFredomS , costOfLivingS , id_adminD) )              
 
             
             c = c + 1

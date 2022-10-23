@@ -21,9 +21,13 @@ CREATE TABLE Cities (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     city STRING UNIQUE,
     salary DECIMAL UNIQUE,
-    score DECIMAL UNIQUE,
+    leisureS DECIMAL UNIQUE,
+    safetyS DECIMAL UNIQUE,
+    businessFredomS DECIMAL UNIQUE,
+    costOfLivingS DECIMAL UNIQUE,
     salaryScoreIndex DECIMAL UNIQUE,
-    id_adminD INTEGER
+    id_adminD INTEGER,
+    link STRING UNIQUE
 );
 
 CREATE TABLE AdminD (
@@ -57,18 +61,43 @@ CREATE TABLE GraphType (
 
 
 c=0
-cities = 'none'
 di = dict()
+rLimit = 2
 
 print('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
 while True:
         try:
-            cities = json.dumps(js["_links"]["ua:item"][c]["name"])
-            cities = cities.strip('"').split(',')[0]
-            cur.execute('''INSERT OR REPLACE INTO Cities (city) VALUES (?)''',(cities,) )                
+            city = json.dumps(js["_links"]["ua:item"][c]["name"])
+            city = city.strip('"').split(',')[0]
+            link = json.dumps(js["_links"]["ua:item"][c]["href"]).strip('"')
+
+            ur = urllib.request.urlopen(link)
+            js2 = json.loads(ur.read().decode())
+            country = json.dumps(js2["links"]["ua:countries"][0]["name"])
+            adminD = json.dumps(js2["links"]["ua:admin1-divisions"][0]["name"])
+
+            ur = urllib.request.urlopen(link + 'salary')
+            js2 = json.loads(ur.read().decode())
+            salary = json.dumps(js2["salaries"][45]["salary_percentiles"]["percentile_50"])
+            print(json.dumps(js2["salaries"][45]["job"]["id"]))
+
+            ur = urllib.request.urlopen(link + 'scores')
+            js2 = json.loads(ur.read().decode())
+            leisureS = json.dumps(js2["categories"][14]["score_out_of_10"])
+            safetyS = json.dumps(js2["categories"][7]["score_out_of_10"])
+            businessFredomS = json.dumps(js2["categories"][6]["score_out_of_10"])
+            costOfLivingS = json.dumps(js2["categories"][1]["score_out_of_10"])
+             
+
+            print(json.dumps(js2["salaries"][45]["job"]["id"]))
+
+            cur.execute('''INSERT OR REPLACE INTO Cities (city , salary) VALUES (? , ?)''',(city , salary) )              
             c = c + 1
+            if c == (rLimit): break
         except:
             break
+                
+
 conn.commit()
 print('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
 

@@ -5,6 +5,27 @@ of all the urban areas registered there.
 
 Challenge: Get all the information about scores and salaries,
 make an index of them and get a list of the countries associated
-with all these cities, and get the medium index of the countries
-to make a graph.
+with all these cities, and get the medium index of the countries and admin divisions
+to make a graph. Make graph comparisons of 3 groups of two cities. In the graph 
+presentation we are going to have a specific order, the order values
+are going be stored in a table with comparisons id and order. 2 comparisons will
+need to have the same of graph, and the other one will have to be different.
+
+
+information needed: id | city | salary | score | salary-score index | country | country medium index
+
+tables:
+- id | city | salary | score | salary-score index | id_admin
+
+- id | adminD | adminD index | id_country
+
+- id | country | country medium index
+
+- id | id_city | id_city | order | id_graphType 
+
+- id | graphType
+
+OBSs:
+- information should only repeat in the form of integers
+- Salary info all in USD per year
 

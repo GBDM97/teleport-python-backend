@@ -23,21 +23,34 @@ CREATE TABLE Cities (
     safetyS DECIMAL UNIQUE,
     businessFredomS DECIMAL UNIQUE,
     costOfLivingS DECIMAL UNIQUE,
-    salaryScoreIndex DECIMAL UNIQUE,
+    travelConnectivityS DECIMAL UNIQUE,
+    educationS DECIMAL UNIQUE,
     id_adminD INTEGER
 );
 
 CREATE TABLE AdminDs (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     adminD STRING UNIQUE,
-    adminDIndex DECIMAL UNIQUE,
+    mediumSalary DECIMAL UNIQUE,
+    leisureS DECIMAL UNIQUE,
+    safetyS DECIMAL UNIQUE,
+    businessFredomS DECIMAL UNIQUE,
+    costOfLivingS DECIMAL UNIQUE,
+    travelConnectivityS DECIMAL UNIQUE,
+    educationS DECIMAL UNIQUE,
     id_country INTEGER
 );
 
 CREATE TABLE Countries (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     country STRING UNIQUE,
-    countryMediumIndex DECIMAL UNIQUE
+    mediumSalary DECIMAL UNIQUE,
+    leisureS DECIMAL UNIQUE,
+    safetyS DECIMAL UNIQUE,
+    businessFredomS DECIMAL UNIQUE,
+    costOfLivingS DECIMAL UNIQUE,
+    travelConnectivityS DECIMAL UNIQUE,
+    educationS DECIMAL UNIQUE,
 );
 
 CREATE TABLE Comparisons (
@@ -84,11 +97,15 @@ while True:
             safetyS = json.dumps(js2["categories"][7]["score_out_of_10"])
             businessFredomS = json.dumps(js2["categories"][6]["score_out_of_10"])
             costOfLivingS = json.dumps(js2["categories"][1]["score_out_of_10"])
+            travelConnectivityS = json.dumps(js2["categories"][4]["score_out_of_10"])
+            educationS = json.dumps(js2["categories"][9]["score_out_of_10"])
 
             print(json.dumps(js2["categories"][14]))
             print(json.dumps(js2["categories"][7]))
             print(json.dumps(js2["categories"][6]))
             print(json.dumps(js2["categories"][1]))
+            print(json.dumps(js2["categories"][4]))
+            print(json.dumps(js2["categories"][9]))
             
             cur.execute('''INSERT OR REPLACE INTO Countries (country) VALUES (?)''',(country, ) )
             cur.execute('SELECT id FROM Countries WHERE country = (?)', (country, ))
@@ -97,7 +114,7 @@ while True:
 
             cur.execute('SELECT id FROM AdminDs WHERE adminD = (?)', (adminD, ))
             id_adminD = cur.fetchone()[0]
-            cur.execute('''INSERT OR REPLACE INTO Cities (city , salary , leisureS , safetyS , businessFredomS , costOfLivingS, id_adminD) VALUES (? , ? , ? , ? , ? , ? , ?)''',(city , salary , leisureS , safetyS , businessFredomS , costOfLivingS , id_adminD) )              
+            cur.execute('''INSERT OR REPLACE INTO Cities (city , salary , leisureS , safetyS , businessFredomS , costOfLivingS, travelConnectivityS, educationS, id_adminD) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ?)''',(city , salary , leisureS , safetyS , businessFredomS , costOfLivingS , travelConnectivityS , educationS , id_adminD) )              
 
             
             c = c + 1

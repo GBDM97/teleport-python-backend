@@ -12,10 +12,10 @@ idented = json.dumps(js["_links"]["ua:item"], indent=4)
 
 cur.executescript('''
 DROP TABLE IF EXISTS Cities;
-DROP TABLE IF EXISTS AdminD;
-DROP TABLE IF EXISTS Country;
-DROP TABLE IF EXISTS Comparison;
-DROP TABLE IF EXISTS GraphType;
+DROP TABLE IF EXISTS AdminDs;
+DROP TABLE IF EXISTS Countries;
+DROP TABLE IF EXISTS Comparisons;
+DROP TABLE IF EXISTS GraphTypes;
 
 CREATE TABLE Cities (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -26,32 +26,31 @@ CREATE TABLE Cities (
     businessFredomS DECIMAL UNIQUE,
     costOfLivingS DECIMAL UNIQUE,
     salaryScoreIndex DECIMAL UNIQUE,
-    id_adminD INTEGER,
-    link STRING UNIQUE
+    id_adminD INTEGER
 );
 
-CREATE TABLE AdminD (
+CREATE TABLE AdminDs (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     adminD STRING UNIQUE,
     adminDIndex DECIMAL UNIQUE,
     id_country INTEGER
 );
 
-CREATE TABLE Country (
+CREATE TABLE Countries (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     country STRING UNIQUE,
     countryMediumIndex DECIMAL UNIQUE
 );
 
-CREATE TABLE Comparison (
-    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+CREATE TABLE Comparisons (
     id_city INTEGER,
     id_city2 INTEGER,
     orderP INTEGER UNIQUE,
-    id_graphType INTEGER
+    id_graphType INTEGER,
+    PRIMARY KEY (id_city , id_city2)
 );
 
-CREATE TABLE GraphType (
+CREATE TABLE GraphTypes (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     graphType INTEGER UNIQUE
 );
@@ -73,10 +72,10 @@ while True:
 
             ur = urllib.request.urlopen(link)
             js2 = json.loads(ur.read().decode())
-            country = json.dumps(js2["links"]["ua:countries"][0]["name"])
-            adminD = json.dumps(js2["links"]["ua:admin1-divisions"][0]["name"])
+            country = json.dumps(js2["_links"]["ua:countries"][0]["name"]).strip('"')
+            adminD = json.dumps(js2["_links"]["ua:admin1-divisions"][0]["name"]).strip('"')
 
-            ur = urllib.request.urlopen(link + 'salary')
+            ur = urllib.request.urlopen(link + 'salaries')
             js2 = json.loads(ur.read().decode())
             salary = json.dumps(js2["salaries"][45]["salary_percentiles"]["percentile_50"])
             print(json.dumps(js2["salaries"][45]["job"]["id"]))
@@ -87,17 +86,25 @@ while True:
             safetyS = json.dumps(js2["categories"][7]["score_out_of_10"])
             businessFredomS = json.dumps(js2["categories"][6]["score_out_of_10"])
             costOfLivingS = json.dumps(js2["categories"][1]["score_out_of_10"])
-             
 
-            print(json.dumps(js2["salaries"][45]["job"]["id"]))
+            print(json.dumps(js2["categories"][14]))
+            print(json.dumps(js2["categories"][7]))
+            print(json.dumps(js2["categories"][6]))
+            print(json.dumps(js2["categories"][1]))
 
-            cur.execute('''INSERT OR REPLACE INTO Cities (city , salary) VALUES (? , ?)''',(city , salary) )              
+            cur.execute('''INSERT OR REPLACE INTO Cities (city , salary , leisureS , safetyS , businessFredomS , costOfLivingS) VALUES (? , ? , ? , ? , ? , ?)''',(city , salary , leisureS , safetyS , businessFredomS , costOfLivingS) )              
+            cur.execute('''INSERT OR REPLACE INTO Countries (country) VALUES (?)''',(country, ) )
+            cur.execute('''INSERT OR REPLACE INTO AdminDs (adminD) VALUES (?)''',(adminD, ) )   
+
+            cur.execute('''SELECT id FROM ''')
+
+            
             c = c + 1
             if c == (rLimit): break
-        except:
+        except Exception as err:
+            print (err)
             break
                 
-
 conn.commit()
 print('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
 

@@ -50,7 +50,7 @@ CREATE TABLE Countries (
     businessFredomS DECIMAL UNIQUE,
     costOfLivingS DECIMAL UNIQUE,
     travelConnectivityS DECIMAL UNIQUE,
-    educationS DECIMAL UNIQUE,
+    educationS DECIMAL UNIQUE
 );
 
 CREATE TABLE Comparisons (

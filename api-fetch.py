@@ -31,26 +31,12 @@ CREATE TABLE Cities (
 CREATE TABLE AdminDs (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     adminD STRING UNIQUE,
-    mediumSalary DECIMAL,
-    leisureS DECIMAL,
-    safetyS DECIMAL,
-    businessFredomS DECIMAL,
-    costOfLivingS DECIMAL,
-    travelConnectivityS DECIMAL,
-    educationS DECIMAL,
     id_country INTEGER
 );
 
 CREATE TABLE Countries (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-    country STRING UNIQUE,
-    mediumSalary DECIMAL,
-    leisureS DECIMAL,
-    safetyS DECIMAL,
-    businessFredomS DECIMAL,
-    costOfLivingS DECIMAL,
-    travelConnectivityS DECIMAL,
-    educationS DECIMAL
+    country STRING UNIQUE
 );
 
 CREATE TABLE Comparisons (

@@ -9,6 +9,32 @@ out = cur.fetchone()
 aCountLimit = int(out[0])
 l = [0,0,0,0,0,0,0,0]
 
+cur.executescript(''' 
+DROP TABLE IF EXISTS AdminDsMediumScores;
+DROP TABLE IF EXISTS CountriesMediumScores;
+
+CREATE TABLE AdminDsMediumScores (
+    id_adminD INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    mediumSalary DECIMAL,
+    leisureS DECIMAL,
+    safetyS DECIMAL,
+    businessFredomS DECIMAL,
+    costOfLivingS DECIMAL,
+    travelConnectivityS DECIMAL,
+    educationS DECIMAL
+);
+CREATE TABLE CountriesMediumScores (
+    id_country INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    mediumSalary DECIMAL,
+    leisureS DECIMAL,
+    safetyS DECIMAL,
+    businessFredomS DECIMAL,
+    costOfLivingS DECIMAL,
+    travelConnectivityS DECIMAL,
+    educationS DECIMAL
+);
+''')
+
 while True:
     while True:
         line = line + 1
@@ -37,17 +63,9 @@ while True:
     l[5] = l[6] / listCount
     l[6] = l[7] / listCount
     l[7] = 0
-    cur.execute('''INSERT INTO adminDs (mediumSalary , leisureS , safetyS , businessFredomS , costOfLivingS , travelConnectivityS , educationS) VALUES (?,?,?,?,?,?,?) WHERE id = (?)''', (l[0] , l[1] , l[2] , l[3] , l[4] , l[5] , l[6])(aCount) )
+    cur.execute('''INSERT INTO adminDsMediumScores (mediumSalary , leisureS , safetyS , businessFredomS , costOfLivingS , travelConnectivityS , educationS) VALUES (?,?,?,?,?,?,?)''', (l[0] , l[1] , l[2] , l[3] , l[4] , l[5] , l[6]) )
     l = [0,0,0,0,0,0,0,0]
     line = 0
     aCount = aCount + 1
     if aCount > aCountLimit: break
 conn.commit()
-
-    # salary DECIMAL UNIQUE,
-    # leisureS DECIMAL UNIQUE,
-    # safetyS DECIMAL UNIQUE,
-    # businessFredomS DECIMAL UNIQUE,
-    # costOfLivingS DECIMAL UNIQUE,
-    # travelConnectivityS DECIMAL UNIQUE,
-    # educationS DECIMAL UNIQUE,

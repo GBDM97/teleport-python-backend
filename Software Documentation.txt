@@ -12,10 +12,10 @@ are going be stored in a table with comparisons id and order. 2 comparisons will
 need to have the same of graph, and the other one will have to be different.
 
 
-information needed: id | city | salary | score | salary-score index | country | country medium index
+information needed: id | city | salary | scores | salary-score index | country | country medium index | AdminD 
 
-tables:
-- id | city | salary | score | salary-score index | id_admin
+tables(outdated):
+- id | city | salary | score | salary-score index | id_admin | link (leisure , safety , business freedom , cost of living)
 
 - id | adminD | adminD index | id_country
 
@@ -28,4 +28,15 @@ tables:
 OBSs:
 - information should only repeat in the form of integers
 - Salary info all in USD per year
+
+NOTES:
+
+import urllib.request, urllib.parse, urllib.error
+import json
+ur = urllib.request.urlopen('https://api.teleport.org/api/urban_areas/')
+js = json.loads(ur.read().decode())
+js = json.dumps(js, indent=4)
+print(js)
+
+
 

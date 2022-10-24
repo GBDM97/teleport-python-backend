@@ -58,7 +58,7 @@ CREATE TABLE GraphTypes (
 
 c=0
 di = dict()
-renderLimit = 9
+renderLimit = 270
 
 print('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
 while True:

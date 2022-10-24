@@ -18,39 +18,39 @@ DROP TABLE IF EXISTS GraphTypes;
 CREATE TABLE Cities (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     city STRING UNIQUE,
-    salary DECIMAL UNIQUE,
-    leisureS DECIMAL UNIQUE,
-    safetyS DECIMAL UNIQUE,
-    businessFredomS DECIMAL UNIQUE,
-    costOfLivingS DECIMAL UNIQUE,
-    travelConnectivityS DECIMAL UNIQUE,
-    educationS DECIMAL UNIQUE,
+    salary DECIMAL,
+    leisureS DECIMAL,
+    safetyS DECIMAL,
+    businessFredomS DECIMAL,
+    costOfLivingS DECIMAL,
+    travelConnectivityS DECIMAL,
+    educationS DECIMAL,
     id_adminD INTEGER
 );
 
 CREATE TABLE AdminDs (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     adminD STRING UNIQUE,
-    mediumSalary DECIMAL UNIQUE,
-    leisureS DECIMAL UNIQUE,
-    safetyS DECIMAL UNIQUE,
-    businessFredomS DECIMAL UNIQUE,
-    costOfLivingS DECIMAL UNIQUE,
-    travelConnectivityS DECIMAL UNIQUE,
-    educationS DECIMAL UNIQUE,
+    mediumSalary DECIMAL,
+    leisureS DECIMAL,
+    safetyS DECIMAL,
+    businessFredomS DECIMAL,
+    costOfLivingS DECIMAL,
+    travelConnectivityS DECIMAL,
+    educationS DECIMAL,
     id_country INTEGER
 );
 
 CREATE TABLE Countries (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     country STRING UNIQUE,
-    mediumSalary DECIMAL UNIQUE,
-    leisureS DECIMAL UNIQUE,
-    safetyS DECIMAL UNIQUE,
-    businessFredomS DECIMAL UNIQUE,
-    costOfLivingS DECIMAL UNIQUE,
-    travelConnectivityS DECIMAL UNIQUE,
-    educationS DECIMAL UNIQUE
+    mediumSalary DECIMAL,
+    leisureS DECIMAL,
+    safetyS DECIMAL,
+    businessFredomS DECIMAL,
+    costOfLivingS DECIMAL,
+    travelConnectivityS DECIMAL,
+    educationS DECIMAL
 );
 
 CREATE TABLE Comparisons (
@@ -72,7 +72,7 @@ CREATE TABLE GraphTypes (
 
 c=0
 di = dict()
-rLimit = 2
+renderLimit = 9
 
 print('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
 while True:
@@ -89,7 +89,7 @@ while True:
             ur = urllib.request.urlopen(link + 'salaries')
             js2 = json.loads(ur.read().decode())
             salary = json.dumps(js2["salaries"][45]["salary_percentiles"]["percentile_50"])
-            print(json.dumps(js2["salaries"][45]["job"]["id"]))
+            # print(json.dumps(js2["salaries"][45]["job"]["id"]))
 
             ur = urllib.request.urlopen(link + 'scores')
             js2 = json.loads(ur.read().decode())
@@ -100,25 +100,34 @@ while True:
             travelConnectivityS = json.dumps(js2["categories"][4]["score_out_of_10"])
             educationS = json.dumps(js2["categories"][9]["score_out_of_10"])
 
-            print(json.dumps(js2["categories"][14]))
-            print(json.dumps(js2["categories"][7]))
-            print(json.dumps(js2["categories"][6]))
-            print(json.dumps(js2["categories"][1]))
-            print(json.dumps(js2["categories"][4]))
-            print(json.dumps(js2["categories"][9]))
-            
-            cur.execute('''INSERT OR REPLACE INTO Countries (country) VALUES (?)''',(country, ) )
-            cur.execute('SELECT id FROM Countries WHERE country = (?)', (country, ))
-            id_country = cur.fetchone()[0]
-            cur.execute('''INSERT OR REPLACE INTO AdminDs (adminD , id_country) VALUES (? , ?)''',(adminD, id_country) )   
-
-            cur.execute('SELECT id FROM AdminDs WHERE adminD = (?)', (adminD, ))
-            id_adminD = cur.fetchone()[0]
-            cur.execute('''INSERT OR REPLACE INTO Cities (city , salary , leisureS , safetyS , businessFredomS , costOfLivingS, travelConnectivityS, educationS, id_adminD) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ?)''',(city , salary , leisureS , safetyS , businessFredomS , costOfLivingS , travelConnectivityS , educationS , id_adminD) )              
+            # print(json.dumps(js2["categories"][14]))
+            # print(json.dumps(js2["categories"][7]))
+            # print(json.dumps(js2["categories"][6]))
+            # print(json.dumps(js2["categories"][1]))
+            # print(json.dumps(js2["categories"][4]))
+            # print(json.dumps(js2["categories"][9]))
 
             
+            try:
+                cur.execute('SELECT id FROM Countries WHERE country = (?)', (country, ))
+                id_country = cur.fetchone()[0]
+            except Exception as err:
+                print(err)
+                cur.execute('''INSERT INTO Countries (country) VALUES (?)''',(country, ) )
+                cur.execute('SELECT id FROM Countries WHERE country = (?)', (country, ))
+                id_country = cur.fetchone()[0]
+            try:
+                cur.execute('SELECT id FROM AdminDs WHERE adminD = (?)', (adminD, ))
+                id_adminD = cur.fetchone()[0]
+            except Exception as err:
+                print(err)
+                cur.execute('''INSERT INTO AdminDs (adminD , id_country) VALUES (? , ?)''',(adminD, id_country) )
+                cur.execute('SELECT id FROM AdminDs WHERE adminD = (?)', (adminD, ))
+                id_adminD = cur.fetchone()[0]
+            cur.execute('''INSERT INTO Cities (city , salary , leisureS , safetyS , businessFredomS , costOfLivingS, travelConnectivityS, educationS, id_adminD) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ?)''',(city, salary, leisureS, safetyS, businessFredomS, costOfLivingS, travelConnectivityS, educationS, id_adminD))              
+            print(city, salary, leisureS, safetyS, businessFredomS, costOfLivingS, travelConnectivityS, educationS, id_adminD)
             c = c + 1
-            if c == (rLimit): break
+            if c == (renderLimit): break
         except Exception as err:
             print (err)
             break

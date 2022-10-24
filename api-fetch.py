@@ -17,7 +17,7 @@ DROP TABLE IF EXISTS GraphTypes;
 
 CREATE TABLE Cities (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-    city STRING UNIQUE,
+    city STRING,
     salary DECIMAL,
     leisureS DECIMAL,
     safetyS DECIMAL,
@@ -30,7 +30,7 @@ CREATE TABLE Cities (
 
 CREATE TABLE AdminDs (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-    adminD STRING UNIQUE,
+    adminD STRING,
     id_country INTEGER
 );
 
@@ -56,9 +56,9 @@ CREATE TABLE GraphTypes (
 
 
 
-c=0
+c=95
 di = dict()
-renderLimit = 270
+renderLimit = 267
 
 print('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
 while True:
@@ -70,12 +70,14 @@ while True:
             ur = urllib.request.urlopen(link)
             js2 = json.loads(ur.read().decode())
             country = json.dumps(js2["_links"]["ua:countries"][0]["name"]).strip('"')
-            adminD = json.dumps(js2["_links"]["ua:admin1-divisions"][0]["name"]).strip('"')
-
+            try:
+                adminD = json.dumps(js2["_links"]["ua:admin1-divisions"][0]["name"]).strip('"')
+            except:
+                adminD = country
             ur = urllib.request.urlopen(link + 'salaries')
             js2 = json.loads(ur.read().decode())
             salary = json.dumps(js2["salaries"][45]["salary_percentiles"]["percentile_50"])
-            # print(json.dumps(js2["salaries"][45]["job"]["id"]))
+            print(json.dumps(js2["salaries"][45]["job"]["id"]))
 
             ur = urllib.request.urlopen(link + 'scores')
             js2 = json.loads(ur.read().decode())
@@ -110,10 +112,10 @@ while True:
                 cur.execute('''INSERT INTO AdminDs (adminD , id_country) VALUES (? , ?)''',(adminD, id_country) )
                 cur.execute('SELECT id FROM AdminDs WHERE adminD = (?)', (adminD, ))
                 id_adminD = cur.fetchone()[0]
-            cur.execute('''INSERT INTO Cities (city , salary , leisureS , safetyS , businessFredomS , costOfLivingS, travelConnectivityS, educationS, id_adminD) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ?)''',(city, salary, leisureS, safetyS, businessFredomS, costOfLivingS, travelConnectivityS, educationS, id_adminD))              
+            cur.execute('''INSERT OR IGNORE INTO Cities (city , salary , leisureS , safetyS , businessFredomS , costOfLivingS, travelConnectivityS, educationS, id_adminD) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ?)''',(city, salary, leisureS, safetyS, businessFredomS, costOfLivingS, travelConnectivityS, educationS, id_adminD))              
             print(city, salary, leisureS, safetyS, businessFredomS, costOfLivingS, travelConnectivityS, educationS, id_adminD)
             c = c + 1
-            if c == (renderLimit): break
+            if c >= (renderLimit): break
         except Exception as err:
             print (err)
             break
